@@ -1,0 +1,2 @@
+hiera_var2: "var2 from nodep2.yaml"
+apache_port: 8085
