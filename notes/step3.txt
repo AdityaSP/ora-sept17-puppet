@@ -1,0 +1,62 @@
+Variable
+1. from with in the class eg. init.pp
+    $apache_port = 8000
+2. apache2::params
+    $apache_port = 8000
+   init.pp
+        To access $apache_port from params -2 ways
+            1. include apache2::params
+                $apache2::params::apache_port
+            2. class apache2 inherits apache2::params
+                $apache2_port
+
+3. facter 
+    /etc/facter/facts.d
+        - file.txt
+            <key>=<value>
+        - json, yaml
+        - executable script 
+            output should be only in the format of <key>=<value>
+    to access a facter variable
+        1. $<factervariable> -- problem is the value can be overwritten
+        2. $::<factervariable>
+                
+enable hieradata
+    1. /etc/puppet/puppet.conf
+        hiera_config=$confdir/hiera.yaml
+    2. /etc/puppet/hiera.yaml
+        :hierarchy = will indicate what gets picked up first
+        :datadir = where to find hieradata
+    3. 
+        /etc/puppet -> also as $confdir
+    - puppet.conf
+    - hiera.yaml
+    - manifests
+        - site.pp 
+    - modules
+        - where all modules reside by default. available to all envs
+        - apache2
+    - environments
+        - dev
+            - manifests
+                - app.pp
+                    include apache2 -- will pick up env specific apache2
+                    access hiera config
+                    hiera('namevar1')  -- higher version of puppet $namevar1
+            - modules
+                apache2  ---- specific to dev
+            - hieradata
+                defaults.yaml
+                    namevar1: value
+                global.yaml
+                dev.yaml
+                nodep1.yaml
+                nodep2.yaml
+        - ua
+            - manifests
+                - app.pp
+                    include apache2 -- will pick up apache2 @ /etc/puppet/modules
+            - modules
+            - hieradata
+        
+    

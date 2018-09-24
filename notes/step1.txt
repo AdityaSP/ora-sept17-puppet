@@ -1,0 +1,63 @@
+1. bring up nodep1
+2. helloworld.pp - puppet apply
+3. module 
+    puppet module generate sp-conf
+    mv sp-conf to conf
+4. module
+   -- manifests
+        init.pp 
+            - class <name of module>
+        some.pp
+            - class <name of module>::some
+   -- templates
+        anything withing <%= @<name of variable> %>
+        - ports.conf.erb  # erb - embedded ruby
+        any of manifests
+            file -resource
+                content => template('<nameofmodule>/ports.conf.erb')
+                namevar == destination location
+        
+   -- files
+        - f1.txt
+        any of manifests
+            file -resource
+                source => puppet:///module/<nameofmodule/f1.txt
+                namevar == destination location
+5. run module locally
+    mod_run.pp
+        - include <name of module>
+        - include <name of module>::<name of class>
+    puppet apply --modulepath <location of the module> mod_run.pp    
+
+6. puppet 192.168.33.50
+6.1 installed puppet master
+
+/etc/puppet -> also as $confdir
+    - puppet.conf
+    - restart puppet master : service puppetmaster restart
+    - manifests
+        - site.pp ---- First point of entry
+                        all node definitions node <nodename> { .... }
+        - node.pp --- node definition 
+            in site.pp import 'node.pp'
+    - modules
+        - where all modules reside by default
+        
+7. from nodep1 puppet agent -t
+      7.1 : generates a cert and sends it to puppet
+   any server other than puppet 
+    puppet agent -t --server <fqdn/ipadd of server>
+    
+8. on the master
+    puppet cert sign --all
+    
+9. nodep1 
+    puppet agent --enable
+    puppet agent -t
+    
+            
+    
+    
+
+
+

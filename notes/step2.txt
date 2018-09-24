@@ -1,0 +1,29 @@
+Bring up an env
+1. change my puppet.conf 
+    environmentpath = $confdir/environments
+2. create /etc/puppet/environments    
+
+/etc/puppet -> also as $confdir
+    - puppet.conf
+    - restart puppet master : service puppetmaster restart
+    - manifests
+        - site.pp --- make this empty
+        - node.pp --- node definition 
+            in site.pp import 'node.pp'
+    - modules
+        - where all modules reside by default. available to all envs
+        - apache2
+    - environments
+        - dev
+            - manifests
+                - app.pp
+                    include apache2 -- will pick up env specific apache2
+            - modules
+                apache2  ---- specific to dev
+        - ua
+            - manifests
+                - app.pp
+                    include apache2 -- will pick up apache2 @ /etc/puppet/modules
+            - modules
+        
+3. restart puppet master
